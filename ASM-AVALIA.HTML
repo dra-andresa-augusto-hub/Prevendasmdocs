@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2c5f7c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>ASM-Avaliar por Dra Andresa Augusto</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c5f7c 0%, #1a3a4a 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            color: #2c5f7c;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+            font-size: 0.95rem;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+        
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #2c5f7c;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        @media (max-width: 480px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .pain-scale {
+            margin: 20px 0;
+        }
+        
+        .pain-scale-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .pain-scale-container {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        
+        .pain-box {
+            flex: 1;
+            aspect-ratio: 1;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            font-size: 1.1rem;
+        }
+        
+        .pain-box.selected {
+            background: #2c5f7c;
+            color: white;
+            border-color: #2c5f7c;
+            transform: scale(1.1);
+        }
+        
+        .pain-box:active {
+            transform: scale(0.95);
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        
+        .radio-item:active {
+            background: #f0f0f0;
+        }
+        
+        input[type="radio"] {
+            width: 22px;
+            height: 22px;
+            accent-color: #2c5f7c;
+        }
+        
+        .star-container {
+            margin-top: 20px;
+        }
+        
+        .star-legend {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .star-legend strong {
+            color: #2c5f7c;
+        }
+        
+        .star-regions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .star-region {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .star-region h4 {
+            color: #2c5f7c;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2c5f7c;
+        }
+        
+        .star-movement {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 3px solid #2c5f7c;
+        }
+        
+        .star-movement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .star-movement-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+        
+        .star-options {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .star-option {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #f0f0f0;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .star-option input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+        }
+        
+        .star-option.selected {
+            background: #2c5f7c;
+            color: white;
+        }
+        
+        .star-obs {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            min-height: 60px;
+            margin-top: 8px;
+            font-family: inherit;
+        }
+        
+        .postural-grid {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .postural-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #2c5f7c;
+        }
+        
+        .postural-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .postural-title {
+            font-weight: 600;
+            color: #2c5f7c;
+        }
+        
+        .postural-checks {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: #f0f0f0;
+            font-size: 0.9rem;
+        }
+        
+        .check-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .postural-obs {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .evolution-entry {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .evolution-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .evolution-date {
+            font-weight: 600;
+            color: #28a745;
+        }
+        
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        
+        .btn-add-evolution {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .action-buttons {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 15px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            z-index: 99;
+        }
+        
+        .btn {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-primary {
+            background: #2c5f7c;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #25d366;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .patients-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .patient-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid #2c5f7c;
+        }
+        
+        .patient-card:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .patient-name {
+            font-weight: 600;
+            color: #2c5f7c;
+            font-size: 1.1rem;
+        }
+        
+        .patient-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow: hidden;
+            animation: slideUp 0.3s;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            background: #2c5f7c;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        
+        .tab-btn {
+            padding: 10px 15px;
+            border: 2px solid #2c5f7c;
+            background: white;
+            color: #2c5f7c;
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: #2c5f7c;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 2000;
+            display: none;
+            animation: slideDown 0.3s;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateX(-50%) translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            padding-left: 20px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏥 ASM-Avaliar</h1>
+        <p>por Dra Andresa Augusto</p>
+    </div>
+    
+    <div class="container">
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="showTab('avaliacao')">📋 Avaliação</button>
+            <button class="tab-btn" onclick="showTab('pacientes')">👥 Pacientes</button>
+            <button class="tab-btn" onclick="showTab('evolucao')">📈 Evolução</button>
+        </div>
+        
+        <div id="avaliacao" class="tab-content active">
+            <div class="section">
+                <h3 class="section-title">👤 Dados do Paciente</h3>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Nome Completo</label>
+                        <input type="text" id="nome" placeholder="Nome do paciente">
+                    </div>
+                    <div class="form-group">
+                        <label>Idade</label>
+                        <input type="number" id="idade" placeholder="Anos">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Data da Avaliação</label>
+                        <input type="date" id="dataAvaliacao">
+                    </div>
+                    <div class="form-group">
+                        <label>Profissão</label>
+                        <input type="text" id="profissao" placeholder="Ocupação">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3 class="section-title">🩺 Queixa Principal</h3>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea id="queixaPrincipal" placeholder="Descreva a queixa principal..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Evolução dos Sintomas</label>
+                    <textarea id="evolucaoSintomas" placeholder="Como os sintomas evoluíram..."></textarea>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Como Começou</label>
+                        <input type="text" id="comoComecou" placeholder="Causa inicial">
+                    </div>
+                    <div class="form-group">
+                        <label>Quando Começou</label>
+                        <input type="text" id="quandoComecou" placeholder="Data/Período">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3 class="section-title">😣 Escala Numérica Verbal da Dor</h3>
+                <div class="pain-scale">
+                    <div class="pain-scale-labels">
+                        <span>Sem dor</span>
+                        <span>Dor insuportável</span>
+                    </div>
+                    <div class="pain-scale-container">
+                        <div class="pain-box" onclick="selectPain(0)" data-value="0">0</div>
+                        <div class="pain-box" onclick="selectPain(1)" data-value="1">1</div>
+                        <div class="pain-box" onclick="selectPain(2)" data-value="2">2</div>
+                        <div class="pain-box" onclick="selectPain(3)" data-value="3">3</div>
+                        <div class="pain-box" onclick="selectPain(4)" data-value="4">4</div>
+                        <div class="pain-box" onclick="selectPain(5)" data-value="5">5</div>
+                        <div class="pain-box" onclick="selectPain(6)" data-value="6">6</div>
+                        <div class="pain-box" onclick="selectPain(7)" data-value="7">7</div>
+                        <div class="pain-box" onclick="selectPain(8)" data-value="8">8</div>
+                        <div class="pain-box" onclick="selectPain(9)" data-value="9">9</div>
+                        <div class="pain-box" onclick="selectPain(10)" data-value="10">10</div>
+                    </div>
+                    <input type="hidden" id="escalaDor" value="">
+                </div>
+                
+                <div class="form-group">
+                    <label>Extensão da Dor</label>
+                    <input type="text" id="extensaoDor" placeholder="Onde se irradia?">
+                </div>
+                <div class="form-group">
+                    <label>Características da Dor</label>
+                    <input type="text" id="caracteristicaDor" placeholder="Queimadura, latejante, pontada...">
+                </div>
+                <div class="form-group">
+                    <label>Frequência da Dor</label>
+                    <input type="text" id="frequenciaDor" placeholder="Constante, intermitente...">
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>O que Piora</label>
+                        <input type="text" id="piora" placeholder="Movimentos/posições">
+                    </div>
+                    <div class="form-group">
+                        <label>O que Melhora</label>
+                        <input type="text" id="melhora" placeholder="Movimentos/posições">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3 class="section-title">📋 Histórico</h3>
+                <div class="form-group">
+                    <label>Tratamentos Anteriores</label>
+                    <textarea id="tratamentosAnteriores" placeholder="Fisioterapia, medicamentos..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Medicação em Uso</label>
+                    <textarea id="medicacao" placeholder="Medicamentos atuais..."></textarea>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Cirurgias</label>
+                        <input type="text" id="cirurgias" placeholder="Histórico cirúrgico">
+                    </div>
+                    <div class="form-group">
+                        <label>Traumas</label>
+                        <input type="text" id="traumas" placeholder="Fraturas, entorses...">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3 class="section-title">🫀 Questões Viscerais e Sono</h3>
+                <div class="form-group">
+                    <label>Acorda com Dor?</label>
+                    <div class="radio-group">
+                        <label class="radio-item"><input type="radio" name="acordaDor" value="Sim"> Sim</label>
+                        <label class="radio-item"><input type="radio" name="acordaDor" value="Não"> Não</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Dorme com Dor?</label>
+                    <div class="radio-group">
+                        <label class="radio-item"><input type="radio" name="dormeDor" value="Sim"> Sim</label>
+                        <label class="radio-item"><input type="radio" name="dormeDor" value="Não"> Não</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Dorme Bem?</label>
+                    <div class="radio-group">
+                        <label class="radio-item"><input type="radio" name="dormeBem" value="Sim"> Sim</label>
+                        <label class="radio-item"><input type="radio" name="dormeBem" value="Não"> Não</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Posição de Dormir</label>
+                    <input type="text" id="posicaoDormir" placeholder="De lado, de costas...">
+                </div>
+                <div class="form-group">
+                    <label>Contra-indicação</label>
+                    <textarea id="contraindicacao" placeholder="Observações..."></textarea>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3 class="section-title">💪 Condições Gerais</h3>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Alimentação</label>
+                        <input type="text" id="alimentacao" placeholder="Hábitos alimentares">
+                    </div>
+                    <div class="form-group">
+                        <label>Atividade Física</label>
+                        <input type="text" id="atividadeFisica" placeholder="Pratica exercícios?">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Emocional</label>
+                    <input type="text" id="emocional" placeholder="Estresse, ansiedade...">
+                </div>
+                <div class="form-group">
+                    <label>Exames de Imagem</label>
+                    <textarea id="examesImagem" placeholder="RM, TC, Raio-X..."></textarea>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3 class="section-title">🔍 Exame Físico</h3>
+                <div class="form-group">
+                    <label>Inspeção Estática</label>
+                    <textarea id="inspecaoEstatica" placeholder="Observações posturais..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Inspeção Dinâmica</label>
+                    <textarea id="inspecaoDinamica" placeholder="Movimentação ativa..."></textarea>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3 class="section-title">⭐ Estrela da Dor (Amplitude de Movimento)</h3>
+                
+                <div class="star-legend">
+                    <strong>Legenda:</strong><br>
+                    C = Completo (amplitude normal) | P = Parcial (amplitude reduzida) | R = Restrito (severamente limitado)
+                </div>
+                
+                <div class="star-container">
+                    <div class="star-regions">
+                        <div class="star-region">
+                            <h4>🔷 Lombar</h4>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">F - Flexão</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="lombar-f" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="lombar-f" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="lombar-f" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="lombar-f-obs" placeholder="Observações..."></textarea>
+                            </div>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">E - Extensão</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="lombar-e" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="lombar-e" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="lombar-e" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="lombar-e-obs" placeholder="Observações..."></textarea>
+                            </div>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">Sd - Inclinação Direita</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="lombar-sd" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="lombar-sd" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="lombar-sd" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="lombar-sd-obs" placeholder="Observações..."></textarea>
+                            </div>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">Se - Inclinação Esquerda</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="lombar-se" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="lombar-se" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="lombar-se" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="lombar-se-obs" placeholder="Observações..."></textarea>
+                            </div>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">Rd - Rotação Direita</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="lombar-rd" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="lombar-rd" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="lombar-rd" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="lombar-rd-obs" placeholder="Observações..."></textarea>
+                            </div>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">Re - Rotação Esquerda</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="lombar-re" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="lombar-re" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="lombar-re" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="lombar-re-obs" placeholder="Observações..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="star-region">
+                            <h4>🔶 Torácica</h4>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">F - Flexão</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="toracica-f" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="toracica-f" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="toracica-f" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="toracica-f-obs" placeholder="Observações..."></textarea>
+                            </div>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">E - Extensão</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="toracica-e" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="toracica-e" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="toracica-e" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="toracica-e-obs" placeholder="Observações..."></textarea>
+                            </div>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">Sd - Inclinação Direita</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="toracica-sd" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="toracica-sd" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="toracica-sd" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="toracica-sd-obs" placeholder="Observações..."></textarea>
+                            </div>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">Se - Inclinação Esquerda</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="toracica-se" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="toracica-se" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="toracica-se" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="toracica-se-obs" placeholder="Observações..."></textarea>
+                            </div>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">Rd - Rotação Direita</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="toracica-rd" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="toracica-rd" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="toracica-rd" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="toracica-rd-obs" placeholder="Observações..."></textarea>
+                            </div>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">Re - Rotação Esquerda</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="toracica-re" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="toracica-re" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="toracica-re" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="toracica-re-obs" placeholder="Observações..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="star-region">
+                            <h4>🔵 Cervical</h4>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">F - Flexão</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="cervical-f" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="cervical-f" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="cervical-f" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="cervical-f-obs" placeholder="Observações..."></textarea>
+                            </div>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">E - Extensão</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="cervical-e" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="cervical-e" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="cervical-e" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="cervical-e-obs" placeholder="Observações..."></textarea>
+                            </div>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">Sd - Inclinação Direita</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="cervical-sd" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="cervical-sd" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="cervical-sd" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="cervical-sd-obs" placeholder="Observações..."></textarea>
+                            </div>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">Se - Inclinação Esquerda</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="cervical-se" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="cervical-se" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="cervical-se" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="cervical-se-obs" placeholder="Observações..."></textarea>
+                            </div>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">Rd - Rotação Direita</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="cervical-rd" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="cervical-rd" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="cervical-rd" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="cervical-rd-obs" placeholder="Observações..."></textarea>
+                            </div>
+                            
+                            <div class="star-movement">
+                                <div class="star-movement-header">
+                                    <span class="star-movement-title">Re - Rotação Esquerda</span>
+                                    <div class="star-options">
+                                        <label class="star-option"><input type="radio" name="cervical-re" value="C"> C</label>
+                                        <label class="star-option"><input type="radio" name="cervical-re" value="P"> P</label>
+                                        <label class="star-option"><input type="radio" name="cervical-re" value="R"> R</label>
+                                    </div>
+                                </div>
+                                <textarea class="star-obs" id="cervical-re-obs" placeholder="Observações..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-top: 20px;">
+                    <label>Diagnóstico por Exercício Repetitivo</label>
+                    <textarea id="diagnosticoExercicio" placeholder="Testes específicos..."></textarea>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3 class="section-title">🦴 Captadores Posturais</h3>
+                <div class="postural-grid">
+                    <div class="postural-item">
+                        <div class="postural-header">
+                            <span class="postural-title">Olho</span>
+                            <div class="postural-checks">
+                                <label class="check-item"><input type="radio" name="olho" value="Positivo"> Pos</label>
+                                <label class="check-item"><input type="radio" name="olho" value="Negativo"> Neg</label>
+                            </div>
+                        </div>
+                        <input type="text" class="postural-obs" id="olho-obs" placeholder="Observações...">
+                    </div>
+                    
+                    <div class="postural-item">
+                        <div class="postural-header">
+                            <span class="postural-title">ATM</span>
+                            <div class="postural-checks">
+                                <label class="check-item"><input type="radio" name="atm" value="Positivo"> Pos</label>
+                                <label class="check-item"><input type="radio" name="atm" value="Negativo"> Neg</label>
+                            </div>
+                        </div>
+                        <input type="text" class="postural-obs" id="atm-obs" placeholder="Observações...">
+                    </div>
+                    
+                    <div class="postural-item">
+                        <div class="postural-header">
+                            <span class="postural-title">Pé</span>
+                            <div class="postural-checks">
+                                <label class="check-item"><input type="radio" name="pe" value="Positivo"> Pos</label>
+                                <label class="check-item"><input type="radio" name="pe" value="Negativo"> Neg</label>
+                            </div>
+                        </div>
+                        <input type="text" class="postural-obs" id="pe-obs" placeholder="Observações...">
+                    </div>
+                    
+                    <div class="postural-item">
+                        <div class="postural-header">
+                            <span class="postural-title">Cicatrizes</span>
+                            <div class="postural-checks">
+                                <label class="check-item"><input type="radio" name="cicatrizes" value="Positivo"> Pos</label>
+                                <label class="check-item"><input type="radio" name="cicatrizes" value="Negativo"> Neg</label>
+                            </div>
+                        </div>
+                        <input type="text" class="postural-obs" id="cicatrizes-obs" placeholder="Observações...">
+                    </div>
+                    
+                    <div class="postural-item">
+                        <div class="postural-header">
+                            <span class="postural-title">Vísceras</span>
+                            <div class="postural-checks">
+                                <label class="check-item"><input type="radio" name="visceras" value="Positivo"> Pos</label>
+                                <label class="check-item"><input type="radio" name="visceras" value="Negativo"> Neg</label>
+                            </div>
+                        </div>
+                        <input type="text" class="postural-obs" id="visceras-obs" placeholder="Observações...">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3 class="section-title">🧪 Testes e Objetivos</h3>
+                <div class="form-group">
+                    <label>Testes Neurológicos e Ortopédicos</label>
+                    <textarea id="testesNeurologicos" placeholder="Resultados dos testes..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Objetivos do Tratamento</label>
+                    <textarea id="objetivos" placeholder="Metas a serem alcançadas..."></textarea>
+                </div>
+            </div>
+        </div>
+        
+        <div id="pacientes" class="tab-content">
+            <div class="section">
+                <h3 class="section-title">👥 Pacientes Cadastrados</h3>
+                <input type="text" class="search-box" id="searchPatients" placeholder="🔍 Buscar paciente..." onkeyup="searchPatients()">
+                <div id="patientsList" class="patients-list">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <p>Nenhum paciente cadastrado</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="evolucao" class="tab-content">
+            <div class="section">
+                <h3 class="section-title">📈 Evolução do Paciente</h3>
+                <div id="evolutionSection">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">👤</div>
+                        <p>Selecione um paciente na aba "Pacientes" para ver e adicionar evoluções</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="action-buttons">
+        <button class="btn btn-primary" onclick="savePatient()">💾 Salvar</button>
+        <button class="btn btn-success" onclick="sendWhatsApp()">📱 WhatsApp</button>
+    </div>
+    
+    <div id="evolutionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📝 Nova Evolução</h3>
+                <button class="close-modal" onclick="closeEvolutionModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Data</label>
+                    <input type="date" id="evolutionDate">
+                </div>
+                <div class="form-group">
+                    <label>Descrição da Evolução</label>
+                    <textarea id="evolutionText" rows="6" placeholder="Descreva a evolução..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeEvolutionModal()" style="flex: 1;">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveEvolution()" style="flex: 1;">Salvar</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast"></div>
+
+    <script>
+        let patients = JSON.parse(localStorage.getItem('asm_avaliar_patients')) || [];
+        let currentPatientId = null;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('dataAvaliacao').valueAsDate = new Date();
+            renderPatientsList();
+            
+            document.querySelectorAll('.star-option input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const parent = this.closest('.star-options');
+                    parent.querySelectorAll('.star-option').forEach(opt => opt.classList.remove('selected'));
+                    this.closest('.star-option').classList.add('selected');
+                });
+            });
+        });
+        
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            if (tabName === 'pacientes') renderPatientsList();
+        }
+        
+        function selectPain(value) {
+            document.querySelectorAll('.pain-box').forEach(box => box.classList.remove('selected'));
+            document.querySelector('.pain-box[data-value="' + value + '"]').classList.add('selected');
+            document.getElementById('escalaDor').value = value;
+        }
+        
+        function savePatient() {
+            const nome = document.getElementById('nome').value.trim();
+            if (!nome) {
+                showToast('❌ Digite o nome do paciente!', 'error');
+                return;
+            }
+            
+            const patientData = {
+                id: currentPatientId || Date.now(),
+                nome: nome,
+                idade: document.getElementById('idade').value,
+                dataAvaliacao: document.getElementById('dataAvaliacao').value,
+                profissao: document.getElementById('profissao').value,
+                queixaPrincipal: document.getElementById('queixaPrincipal').value,
+                evolucaoSintomas: document.getElementById('evolucaoSintomas').value,
+                comoComecou: document.getElementById('comoComecou').value,
+                quandoComecou: document.getElementById('quandoComecou').value,
+                escalaDor: document.getElementById('escalaDor').value,
+                extensaoDor: document.getElementById('extensaoDor').value,
+                caracteristicaDor: document.getElementById('caracteristicaDor').value,
+                frequenciaDor: document.getElementById('frequenciaDor').value,
+                piora: document.getElementById('piora').value,
+                melhora: document.getElementById('melhora').value,
+                tratamentosAnteriores: document.getElementById('tratamentosAnteriores').value,
+                medicacao: document.getElementById('medicacao').value,
+                cirurgias: document.getElementById('cirurgias').value,
+                traumas: document.getElementById('traumas').value,
+                acordaDor: getRadioValue('acordaDor'),
+                dormeDor: getRadioValue('dormeDor'),
+                dormeBem: getRadioValue('dormeBem'),
+                posicaoDormir: document.getElementById('posicaoDormir').value,
+                contraindicacao: document.getElementById('contraindicacao').value,
+                alimentacao: document.getElementById('alimentacao').value,
+                atividadeFisica: document.getElementById('atividadeFisica').value,
+                emocional: document.getElementById('emocional').value,
+                examesImagem: document.getElementById('examesImagem').value,
+                inspecaoEstatica: document.getElementById('inspecaoEstatica').value,
+                inspecaoDinamica: document.getElementById('inspecaoDinamica').value,
+                estrelaDor: {
+                    lombar: getStarRegionData('lombar'),
+                    toracica: getStarRegionData('toracica'),
+                    cervical: getStarRegionData('cervical')
+                },
+                diagnosticoExercicio: document.getElementById('diagnosticoExercicio').value,
+                captadores: {
+                    olho: { status: getRadioValue('olho'), obs: document.getElementById('olho-obs').value },
+                    atm: { status: getRadioValue('atm'), obs: document.getElementById('atm-obs').value },
+                    pe: { status: getRadioValue('pe'), obs: document.getElementById('pe-obs').value },
+                    cicatrizes: { status: getRadioValue('cicatrizes'), obs: document.getElementById('cicatrizes-obs').value },
+                    visceras: { status: getRadioValue('visceras'), obs: document.getElementById('visceras-obs').value }
+                },
+                testesNeurologicos: document.getElementById('testesNeurologicos').value,
+                objetivos: document.getElementById('objetivos').value,
+                evolutions: currentPatientId ? getPatientEvolutions(currentPatientId) : [],
+                lastUpdate: new Date().toISOString()
+            };
+            
+            const index = patients.findIndex(p => p.id === patientData.id);
+            if (index >= 0) patients[index] = patientData;
+            else patients.push(patientData);
+            
+            localStorage.setItem('asm_avaliar_patients', JSON.stringify(patients));
+            currentPatientId = patientData.id;
+            showToast('✅ Paciente salvo com sucesso!');
+        }
+        
+        function getRadioValue(name) {
+            const radio = document.querySelector('input[name="' + name + '"]:checked');
+            return radio ? radio.value : '';
+        }
+        
+        function getStarRegionData(region) {
+            const movements = ['f', 'e', 'sd', 'se', 'rd', 're'];
+            const data = {};
+            movements.forEach(mov => {
+                const radio = document.querySelector('input[name="' + region + '-' + mov + '"]:checked');
+                data[mov] = {
+                    status: radio ? radio.value : '',
+                    obs: document.getElementById(region + '-' + mov + '-obs').value
+                };
+            });
+            return data;
+        }
+        
+        function getPatientEvolutions(id) {
+            const patient = patients.find(p => p.id === id);
+            return patient ? patient.evolutions || [] : [];
+        }
+        
+        function renderPatientsList() {
+            const list = document.getElementById('patientsList');
+            const search = document.getElementById('searchPatients')?.value.toLowerCase() || '';
+            let filtered = search ? patients.filter(p => p.nome.toLowerCase().includes(search)) : patients;
+            filtered.sort((a, b) => new Date(b.lastUpdate) - new Date(a.lastUpdate));
+            
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><p>' + (search ? 'Nenhum paciente encontrado' : 'Nenhum paciente cadastrado') + '</p></div>';
+                return;
+            }
+            
+            list.innerHTML = filtered.map(p => '<div class="patient-card" onclick="loadPatient(' + p.id + ')"><div class="patient-name">' + p.nome + '<span class="status-badge status-active">Ativo</span></div><div class="patient-info">📅 ' + formatDate(p.dataAvaliacao) + ' | 🎂 ' + (p.idade || '?') + ' anos</div><div class="patient-info" style="margin-top: 5px; color: #2c5f7c;">🩺 ' + (p.queixaPrincipal ? p.queixaPrincipal.substring(0, 50) + '...' : 'Sem queixa') + '</div></div>').join('');
+        }
+        
+        function searchPatients() { renderPatientsList(); }
+        
+        function loadPatient(id) {
+            const patient = patients.find(p => p.id === id);
+            if (!patient) return;
+            currentPatientId = id;
+            
+            document.getElementById('nome').value = patient.nome || '';
+            document.getElementById('idade').value = patient.idade || '';
+            document.getElementById('dataAvaliacao').value = patient.dataAvaliacao || '';
+            document.getElementById('profissao').value = patient.profissao || '';
+            document.getElementById('queixaPrincipal').value = patient.queixaPrincipal || '';
+            document.getElementById('evolucaoSintomas').value = patient.evolucaoSintomas || '';
+            document.getElementById('comoComecou').value = patient.comoComecou || '';
+            document.getElementById('quandoComecou').value = patient.quandoComecou || '';
+            
+            if (patient.escalaDor !== '') selectPain(patient.escalaDor);
+            else {
+                document.querySelectorAll('.pain-box').forEach(box => box.classList.remove('selected'));
+                document.getElementById('escalaDor').value = '';
+            }
+            
+            document.getElementById('extensaoDor').value = patient.extensaoDor || '';
+            document.getElementById('caracteristicaDor').value = patient.caracteristicaDor || '';
+            document.getElementById('frequenciaDor').value = patient.frequenciaDor || '';
+            document.getElementById('piora').value = patient.piora || '';
+            document.getElementById('melhora').value = patient.melhora || '';
+            document.getElementById('tratamentosAnteriores').value = patient.tratamentosAnteriores || '';
+            document.getElementById('medicacao').value = patient.medicacao || '';
+            document.getElementById('cirurgias').value = patient.cirurgias || '';
+            document.getElementById('traumas').value = patient.traumas || '';
+            
+            setRadioValue('acordaDor', patient.acordaDor);
+            setRadioValue('dormeDor', patient.dormeDor);
+            setRadioValue('dormeBem', patient.dormeBem);
+            
+            document.getElementById('posicaoDormir').value = patient.posicaoDormir || '';
+            document.getElementById('contraindicacao').value = patient.contraindicacao || '';
+            document.getElementById('alimentacao').value = patient.alimentacao || '';
+            document.getElementById('atividadeFisica').value = patient.atividadeFisica || '';
+            document.getElementById('emocional').value = patient.emocional || '';
+            document.getElementById('examesImagem').value = patient.examesImagem || '';
+            document.getElementById('inspecaoEstatica').value = patient.inspecaoEstatica || '';
+            document.getElementById('inspecaoDinamica').value = patient.inspecaoDinamica || '';
+            
+            if (patient.estrelaDor) {
+                loadStarRegion('lombar', patient.estrelaDor.lombar);
+                loadStarRegion('toracica', patient.estrelaDor.toracica);
+                loadStarRegion('cervical', patient.estrelaDor.cervical);
+            }
+            
+            document.getElementById('diagnosticoExercicio').value = patient.diagnosticoExercicio || '';
+            
+            if (patient.captadores) {
+                setRadioValue('olho', patient.captadores.olho?.status);
+                document.getElementById('olho-obs').value = patient.captadores.olho?.obs || '';
+                setRadioValue('atm', patient.captadores.atm?.status);
+                document.getElementById('atm-obs').value = patient.captadores.atm?.obs || '';
+                setRadioValue('pe', patient.captadores.pe?.status);
+                document.getElementById('pe-obs').value = patient.captadores.pe?.obs || '';
+                setRadioValue('cicatrizes', patient.captadores.cicatrizes?.status);
+                document.getElementById('cicatrizes-obs').value = patient.captadores.cicatrizes?.obs || '';
+                setRadioValue('visceras', patient.captadores.visceras?.status);
+                document.getElementById('visceras-obs').value = patient.captadores.visceras?.obs || '';
+            }
+            
+            document.getElementById('testesNeurologicos').value = patient.testesNeurologicos || '';
+            document.getElementById('objetivos').value = patient.objetivos || '';
+            
+            renderEvolutions();
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelector('.tab-btn').classList.add('active');
+            document.getElementById('avaliacao').classList.add('active');
+            
+            showToast('✅ Paciente carregado!');
+        }
+        
+        function setRadioValue(name, value) {
+            if (!value) return;
+            const radios = document.getElementsByName(name);
+            for (let radio of radios) {
+                if (radio.value === value) {
+                    radio.checked = true;
+                    break;
+                }
+            }
+        }
+        
+        function loadStarRegion(region, data) {
+            if (!data) return;
+            const movements = ['f', 'e', 'sd', 'se', 'rd', 're'];
+            movements.forEach(mov => {
+                if (data[mov]) {
+                    setRadioValue(region + '-' + mov, data[mov].status);
+                    document.getElementById(region + '-' + mov + '-obs').value = data[mov].obs || '';
+                    const radio = document.querySelector('input[name="' + region + '-' + mov + '"][value="' + data[mov].status + '"]');
+                    if (radio) {
+                        const parent = radio.closest('.star-options');
+                        parent.querySelectorAll('.star-option').forEach(opt => opt.classList.remove('selected'));
+                        radio.closest('.star-option').classList.add('selected');
+                    }
+                }
+            });
+        }
+        
+        function renderEvolutions() {
+            const section = document.getElementById('evolutionSection');
+            if (!currentPatientId) {
+                section.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👤</div><p>Selecione um paciente na aba "Pacientes" para ver e adicionar evoluções</p></div>';
+                return;
+            }
+            
+            const patient = patients.find(p => p.id === currentPatientId);
+            const evolutions = patient?.evolutions || [];
+            
+            let html = '<div style="background: #e8f4f8; padding: 15px; border-radius: 10px; margin-bottom: 20px;"><strong>Paciente:</strong> ' + patient.nome + '<br><strong>Total de evoluções:</strong> ' + evolutions.length + '</div><button class="btn-add-evolution" onclick="openEvolutionModal()">➕ Adicionar Nova Evolução</button>';
+            
+            if (evolutions.length === 0) {
+                html += '<div class="empty-state" style="margin-top: 20px;"><div class="empty-state-icon">📝</div><p>Nenhuma evolução registrada ainda</p></div>';
+            } else {
+                const sorted = [...evolutions].sort((a, b) => new Date(b.date) - new Date(a.date));
+                html += sorted.map((evo, index) => '<div class="evolution-entry"><div class="evolution-header"><span class="evolution-date">📅 ' + formatDate(evo.date) + '</span><button class="btn-delete" onclick="deleteEvolution(' + evolutions.indexOf(evo) + ')">🗑️</button></div><p>' + evo.text.replace(/\n/g, '<br>') + '</p></div>').join('');
+            }
+            
+            section.innerHTML = html;
+        }
+        
+        function openEvolutionModal() {
+            document.getElementById('evolutionModal').classList.add('active');
+            document.getElementById('evolutionDate').valueAsDate = new Date();
+            document.getElementById('evolutionText').value = '';
+        }
+        
+        function closeEvolutionModal() { document.getElementById('evolutionModal').classList.remove('active'); }
+        
+        function saveEvolution() {
+            const date = document.getElementById('evolutionDate').value;
+            const text = document.getElementById('evolutionText').value.trim();
+            if (!date || !text) {
+                showToast('❌ Preencha data e descrição!', 'error');
+                return;
+            }
+            
+            const patient = patients.find(p => p.id === currentPatientId);
+            if (!patient) return;
+            if (!patient.evolutions) patient.evolutions = [];
+            
+            patient.evolutions.push({ date: date, text: text, timestamp: new Date().toISOString() });
+            localStorage.setItem('asm_avaliar_patients', JSON.stringify(patients));
+            closeEvolutionModal();
+            renderEvolutions();
+            showToast('✅ Evolução salva!');
+        }
+        
+        function deleteEvolution(index) {
+            if (!confirm('Tem certeza que deseja excluir esta evolução?')) return;
+            const patient = patients.find(p => p.id === currentPatientId);
+            if (patient && patient.evolutions) {
+                patient.evolutions.splice(index, 1);
+                localStorage.setItem('asm_avaliar_patients', JSON.stringify(patients));
+                renderEvolutions();
+                showToast('🗑️ Evolução excluída');
+            }
+        }
+        
+        function sendWhatsApp() {
+            const nome = document.getElementById('nome').value.trim();
+            if (!nome) {
+                showToast('❌ Salve o paciente primeiro!', 'error');
+                return;
+            }
+            
+            let message = '*Ficha de Avaliação - ' + nome + '*\n\n';
+            message += '*Data:* ' + formatDate(document.getElementById('dataAvaliacao').value) + '\n';
+            message += '*Idade:* ' + (document.getElementById('idade').value || 'N/A') + '\n';
+            message += '*Profissão:* ' + (document.getElementById('profissao').value || 'N/A') + '\n\n';
+            message += '*Queixa Principal:*\n' + (document.getElementById('queixaPrincipal').value || 'N/A') + '\n\n';
+            
+            const escalaDor = document.getElementById('escalaDor').value;
+            if (escalaDor !== '') message += '*Escala de Dor:* ' + escalaDor + '/10\n\n';
+            
+            const patient = patients.find(p => p.id === currentPatientId);
+            if (patient && patient.estrelaDor) {
+                message += '*Estrela da Dor (Amplitude de Movimento):*\n';
+                message += 'C = Completo | P = Parcial | R = Restrito\n\n';
+                
+                const regions = { 'lombar': 'Lombar', 'toracica': 'Torácica', 'cervical': 'Cervical' };
+                const movements = { 'f': 'Flexão', 'e': 'Extensão', 'sd': 'Incl. Direita', 'se': 'Incl. Esquerda', 'rd': 'Rotação Dir', 're': 'Rotação Esq' };
+                
+                for (let [regionKey, regionName] of Object.entries(regions)) {
+                    const regionData = patient.estrelaDor[regionKey];
+                    if (regionData) {
+                        let hasData = false;
+                        let regionText = '*' + regionName + ':*\n';
+                        for (let [movKey, movName] of Object.entries(movements)) {
+                            if (regionData[movKey] && regionData[movKey].status) {
+                                hasData = true;
+                                regionText += movName + ': ' + regionData[movKey].status;
+                                if (regionData[movKey].obs) regionText += ' (' + regionData[movKey].obs + ')';
+                                regionText += '\n';
+                            }
+                        }
+                        if (hasData) message += regionText + '\n';
+                    }
+                }
+            }
+            
+            message += '*Diagnóstico:*\n' + (document.getElementById('diagnosticoExercicio').value || 'N/A') + '\n\n';
+            message += '*Objetivos do Tratamento:*\n' + (document.getElementById('objetivos').value || 'N/A') + '\n\n';
+            
+            if (patient && patient.evolutions && patient.evolutions.length > 0) {
+                message += '*Evoluções:*\n';
+                patient.evolutions.slice(-3).forEach(evo => { message += '\n📅 ' + formatDate(evo.date) + ':\n' + evo.text + '\n'; });
+            }
+            
+            message += '\n\n_ASM-Avaliar por Dra Andresa Augusto_';
+            
+            const encoded = encodeURIComponent(message);
+            window.location.href = 'whatsapp://send?text=' + encoded;
+            setTimeout(() => { window.open('https://wa.me/?text=' + encoded, '_blank'); }, 500);
+        }
+        
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+        
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.background = type === 'error' ? '#dc3545' : '#28a745';
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+        
+        document.getElementById('evolutionModal').addEventListener('click', function(e) { if (e.target === this) closeEvolutionModal(); });
+    </script>
+</body>
+</html>
