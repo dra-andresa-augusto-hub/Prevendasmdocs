@@ -20,9 +20,9 @@ body{font-family:Arial,sans-serif;background:#f0f2f5}
 .login-btn{width:100%;padding:14px;background:#1e3a5f;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;font-weight:bold}
 .login-btn:hover{background:#2c5282}
 .login-error{color:#e53e3e;margin-top:15px;display:none;font-size:14px}
-.header{background:#1e3a5f;color:white;padding:20px;text-align:center;border-bottom:3px solid #d4af37}
-.header h1{margin:0;font-size:28px;letter-spacing:2px;text-transform:uppercase}
-.header p{margin:8px 0 0 0;font-size:14px;opacity:0.9;font-style:italic}
+.header{background:#1e3a5f;color:white;padding:15px;text-align:center}
+.header h1{margin:0;font-size:24px}
+.header p{margin:5px 0 0 0;font-size:14px;opacity:0.9}
 .user-bar{background:#152a45;color:white;padding:10px 20px;display:flex;justify-content:space-between;align-items:center}
 .user-bar button{background:rgba(255,255,255,0.2);border:none;color:white;padding:5px 15px;border-radius:5px;cursor:pointer}
 .user-bar button:hover{background:rgba(255,255,255,0.3)}
@@ -114,7 +114,7 @@ th{background:#f7fafc;font-weight:bold;color:#2d3748}
 <!-- TELA DE ATIVAÇÃO -->
 <div id="activationScreen" class="activation-container">
 <div class="activation-box">
-<h2>Ativação do Sistema</h2>
+<h2>🔐 Ativação do Sistema</h2>
 <p>Bem-vindo à ASM Gestão Clínica</p>
 <div class="info-box">
 <strong>Como funciona:</strong><br>
@@ -1113,7 +1113,7 @@ function generatePDFReport() {
   doc.text('Total de Atendimentos: ' + monthAppts.length, 10, yPosition);
   yPosition += 8;
   if (monthAppts.length > 0) {
-    doc.text('Datas dos Atendimentos:', 10, yPosition);
+    doc.text('Datas:', 10, yPosition);
     yPosition += 6;
     monthAppts.forEach(a => {
       doc.text('• ' + formatDate(a.date) + ' às ' + a.time, 15, yPosition);
